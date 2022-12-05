@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/Kaavian-Systems-Pvt-Ltd/Error-Handler/issues"
   },
-  "homepage": "https://github.com/Kaavian-Systems-Pvt-Ltd/Error-Handler#readme"
+  "homepage": "https://github.com/Kaavian-Systems-Pvt-Ltd/Error-Handler#readme",
+  "dependencies": {
+    "body-parser": "^1.20.1",
+    "express": "^5.0.0-alpha.5",
+    "nodemon": "^2.0.20"
+  }
 }
