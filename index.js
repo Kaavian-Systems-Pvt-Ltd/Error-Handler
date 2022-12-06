@@ -1,11 +1,11 @@
 const express = require('express');
 const app = express();
-const { ErrorHandler } = require('./error-handler');
+const { ErrorHandler ,ErrorWrapper, asyncUtil } = require('./error-handler');
 const bodyParser = require ('body-parser');
 const { convert } = require ('./convert');
-const { ErrorWrapper } = require ('./error-handler');
 
 app.use(bodyParser.json());
+// app.use(ErrorWrapper);
 
 // app.use(async( err, req, res, next) => {
 //     console.log(err)
@@ -16,7 +16,7 @@ app.use(bodyParser.json());
 //     next();
 // });
 
-// const errorWrapper = fn =>(req, res, next) =>{
+// const ErrorWrapper = fn =>(req, res, next) =>{
 //     if(fn.constructor.name === 'AsyncFunction'){
 //         fn(req,res).catch(err =>{
 //             console.log('Async Error');
@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 //     }
 // }
 
-app.get('/convert', ErrorWrapper(convert));
+app.get('/convert', asyncUtil(convert));
 
 
 app.get('/uppercase', async(req, res) => {
@@ -50,8 +50,7 @@ app.post('/api/getNumber', (req, res) => {
 })
 
 
-app.use(ErrorHandler)
-app.use(ErrorWrapper)
+app.use(ErrorHandler);
 
 
 // function ErrorHandler(req, res, next ){
