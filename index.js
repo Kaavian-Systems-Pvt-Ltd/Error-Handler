@@ -2,7 +2,7 @@ const ErrorHandler = (err, req, res, next) => {
   if(err){
          console.log(err);
          console.log('in error handler');
-        return res.json({error : 'Unexpected ERROR'});
+        return res.status(500).json({error : 'Unexpected ERROR'});
   }
 }
 
