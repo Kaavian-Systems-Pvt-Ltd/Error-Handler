@@ -1,61 +1,42 @@
 const express = require('express');
 const app = express();
-const { ErrorHandler ,ErrorWrapper, asyncUtil } = require('./error-handler');
+const errorHandler = require ('api-error-handler');
+const { ErrorWrapper ,ErrorHandler } = require('./error-handler');
 const bodyParser = require ('body-parser');
+const cors = require('cors');
 const { convert } = require ('./convert');
 
 app.use(bodyParser.json());
-// app.use(ErrorWrapper);
-
-// app.use(async( err, req, res, next) => {
-//     console.log(err)
-//     if(req != null){
-//     // console.log(req , 14)
-//     errorWrapper(req);
-//     }
-//     next();
-// });
-
-// const ErrorWrapper = fn =>(req, res, next) =>{
-//     if(fn.constructor.name === 'AsyncFunction'){
-//         fn(req,res).catch(err =>{
-//             console.log('Async Error');
-//             return ErrorHandler(err, req, res ,next);
-//         })
-//     }else {
-//         console.log('sync error');
-//         fn(req,res).catch(err =>{
-//             return ErrorHandler(err, req, res ,next);
-//         })
-//    // return ErrorHandler(err, req, res ,next);
-//     }
-// }
-
-app.get('/convert', asyncUtil(convert));
+app.use(cors({ origin: 'http://localhost:3000' }))
 
 
-app.get('/uppercase', async(req, res) => {
+app.get('/convert', ErrorWrapper(convert));
+
+// app.get('/convert', convert )
+
+app.get('/uppercase', (req, res ) => {
     const { data } = req.query;
 //   console.log(text,253);
-    const upper = await data.toUpperCase();
+    const upper = data.toUpperCase();
     res.json(upper);
-})
 
-app.post('/api/getNumber', (req, res) => {
-        const { userName , password } = req.body;
-        if(userName === 'livi' && password === 'kaavian'){
-            res.json({ msg: "user verified"})
-            console.log("user Match");
-        }res.json({msg : 'user not found '})
 })
 
 
-app.use(ErrorHandler);
+
+app.post('/api/getNumber',async(req, res, err, next) => {
+    const { userName , password } = req.body;
+    console.log( userName ,password , 569);
+    if(userName === 'livi' && password === 'kaavian'){
+       return res.json({ msg: "user verified"})
+    }
+    return res.json({msg : 'user not found '})
+})
 
 
-// function ErrorHandler(req, res, next ){
-//     console.log("hi");
-// }
+
+app.use(errorHandler());
+
 
 app.listen(8080, () => {
     console.log('server Running');

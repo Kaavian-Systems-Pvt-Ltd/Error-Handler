@@ -1,33 +1,18 @@
 const ErrorHandler = (err, req, res, next) => {
   if(err){
+         console.log(err);
          console.log('in error handler');
-         res.status(500).json({error : 'Unexpected ERROR'});
+        return res.json({error : 'Unexpected ERROR'});
   }
- }
+}
 
-const ErrorWrapper = (req, res, next) =>{
-  cons
+const ErrorWrapper = fn => (req, res, next) =>{
   if(fn.constructor.name === 'AsyncFunction'){
-    console.log("ansfmeciqnv")
-      fn(req,res).catch(err =>{
-          console.log('Async Error');
-          return res.status(500).send('<h1>Unexpected ERROR</h1>');
-      })
-  } else {
-      console.log('sync function');
-      fn(req,res).catch(err =>{
-          console.log('sync Error');
-          return res.status(500).send('<h1>Unexpected ERROR</h1>');
+    fn(req,res).catch((err) =>{
+       return ErrorHandler( err ,req ,res, next);
     })
-  }
+  } else fn(req ,res)
 }
 
-const asyncUtil = fn =>
-function asyncUtilWrap(...args) {
-  console.log('123');
-  const fnReturn = fn(...args)
-  const next = args[args.length-1]
-  return Promise.resolve(fnReturn).catch(next)
-}
 
-module.exports = { ErrorHandler , ErrorWrapper, asyncUtil };
+module.exports = { ErrorHandler , ErrorWrapper};
