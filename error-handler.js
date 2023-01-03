@@ -1,18 +1,33 @@
-const ErrorHandler = (err, req, res, next) => {
-  if(err){
-         console.log(err);
-         console.log('in error handler');
-        return res.json({error : 'Unexpected ERROR'});
-  }
-}
+const express = require('express');
+const app = express();
+const { ErrorWrapper, ErrorHandler } = require('./index');
+const bodyParser = require ('body-parser');
+const { convert } = require ('./convert');
 
-const ErrorWrapper = fn => (req, res, next) =>{
-  if(fn.constructor.name === 'AsyncFunction'){
-    fn(req,res).catch((err) =>{
-       return ErrorHandler( err ,req ,res, next);
-    })
-  } else fn(req ,res)
-}
+app.use(bodyParser.json());
+
+app.get('/convert', ErrorWrapper(convert));
 
 
-module.exports = { ErrorHandler , ErrorWrapper};
+app.get('/uppercase', (req, res ) => {
+    const { data } = req.query;
+    const upper = data.toUpperCase();
+    res.json(upper);
+
+})
+
+app.post('/api/getNumber',async(req, res, err, next) => {
+    const { userName , password } = req.body;
+    console.log( userName ,password , 569);
+    if(userName === 'livi' && password === 'kaavian'){
+       return res.json({ msg: "user verified"})
+    }
+    return res.json({msg : 'user not found '})
+})
+
+app.use(ErrorHandler);
+
+
+app.listen(8080, () => {
+    console.log('server Running');
+})
