@@ -1,18 +1,16 @@
 const ErrorHandler = (err, req, res, next) => {
-  if(err){
-         console.log(err);
-         console.log('in error handler');
-        return res.status(500).json({error : 'Unexpected ERROR'});
-  }
+    res.json({ error: 'Unexpected Error Occured' });
 }
 
-const ErrorWrapper = fn => (req, res, next) =>{
-  if(fn.constructor.name === 'AsyncFunction'){
-    fn(req,res).catch((err) =>{
-       return ErrorHandler( err ,req ,res, next);
-    })
-  } else fn(req ,res)
+const ErrorWrapper = fn => (req, res, next) => {
+    if (fn.constructor.name === 'AsyncFunction') {
+        fn(req, res).catch((err) => {
+            return res.json({ error: 'Unexpected Error Occured' });
+        })
+        return true;
+    } else {
+        return ErrorHandler(err, req, res, next);
+    };
 }
 
-
-module.exports = { ErrorHandler , ErrorWrapper};
+module.exports = { ErrorHandler, ErrorWrapper };
