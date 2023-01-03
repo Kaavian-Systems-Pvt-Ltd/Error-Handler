@@ -32,7 +32,7 @@ app.get('/uppercase', (req, res ) => {
 // Async Function 
 // for async function we should wrap the entire function in ErrorWrapper function like given below
 
-app.post('/api/getNumber',ErrorWrapper(async(req, res, err, next) => {
+app.post('/api/getNumber',ErrorWrapper(async(req, res) => {
     const { userName , password } = req.body;
     if(userName === 'livi' && password === 'kaavian'){
        return res.json({ msg: "user verified"})
@@ -41,11 +41,13 @@ app.post('/api/getNumber',ErrorWrapper(async(req, res, err, next) => {
 }));
 
 // this is how it looks when we split the function and using ErrorWrapper.
+
 app.get('/convert', ErrorWrapper(convert));
 
 
 //IMPORTANT NOTE
 //error handler middleware should located below the final route 
+
 app.use(ErrorHandler);
 
 
