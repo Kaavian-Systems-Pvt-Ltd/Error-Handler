@@ -1,16 +1,16 @@
-const ErrorHandler = (err, req, res, next) => {
-    res.json({ error: 'Unexpected Error Occured' });
-}
+/* eslint-disable consistent-return */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-else-return */
+const ErrorHandler = (fn) => (req, res) => {
+  if (fn.constructor.name === 'AsyncFunction') {
+    fn(req, res).catch((err) => res.status(500).json({ message: 'Unexpected Error Occured' }));
+  } else {
+    try {
+      fn(req, res);
+    } catch (error) {
+      res.status(500).json({ message: 'Unexpected Error Occured' });
+    }
+  }
+};
 
-const ErrorWrapper = fn => (req, res, next) => {
-    if (fn.constructor.name === 'AsyncFunction') {
-        fn(req, res).catch((err) => {
-            return res.json({ error: 'Unexpected Error Occured' });
-        })
-        return true;
-    } else {
-        return ErrorHandler(err, req, res, next);
-    };
-}
-
-module.exports = { ErrorHandler, ErrorWrapper };
+module.exports = { ErrorHandler };
