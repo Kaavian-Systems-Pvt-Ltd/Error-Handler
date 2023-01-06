@@ -2,9 +2,12 @@
 
 ## Installation 
 
-### step 1 : copy and paste the below line in package.json (server) 
+### step 1 : copy and paste the below line in package.json under dependencies (server) 
 ##### "@kaavian/error-handler": "github:Kaavian-Systems-Pvt-Ltd/Error-Handler"
 ### step 2 : npm install @kaavian/error-handler
+
+### OR
+### npm install https://github.com/Kaavian-Systems-Pvt-Ltd/Error-Handler.git
 
 ## Usage
 
